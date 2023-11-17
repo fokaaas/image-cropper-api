@@ -9,7 +9,7 @@ import * as process from 'process';
 export class FileService {
   saveByHash (directory: string, file: Uint8Array, ext: string) {
     const fileName = createHash('md5').update(file).digest('hex');
-    const filePath = join(__dirname, 'static', directory, fileName + ext);
+    const filePath = join(process.env.STATIC, directory, fileName + ext);
 
     fs.writeFileSync(filePath, file);
 

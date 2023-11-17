@@ -9,7 +9,7 @@ const port = process.env.PORT ?? 3000;
 async function bootstrap () {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  app.useStaticAssets(join(__dirname, '/static/'));
+  app.useStaticAssets(join(process.env.STATIC));
 
   await app.listen(port, () => console.info(`Server started on 127.0.0.1:${port}`));
 }
