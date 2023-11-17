@@ -4,8 +4,7 @@ import { UrlDTO } from '../dto/url.dto';
 import axios from 'axios';
 import sharp from 'sharp';
 import { FileService } from '../utils/files/file.service';
-import mime from 'mime';
-import { extname } from "path";
+import { extname } from 'path';
 
 @Injectable()
 export class ApiService {
@@ -33,5 +32,7 @@ export class ApiService {
       .toBuffer();
 
     const url = this.fileService.saveByHash('images', imageBuffer, extname(data.url));
+
+    return { url };
   }
 }

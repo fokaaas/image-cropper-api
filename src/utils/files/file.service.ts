@@ -3,6 +3,7 @@ import { createHash } from 'crypto';
 import { resolve } from 'url';
 import { join } from 'path';
 import fs from 'fs';
+import * as process from 'process';
 
 @Injectable()
 export class FileService {
@@ -12,7 +13,7 @@ export class FileService {
 
     fs.writeFileSync(filePath, file);
 
-    return resolve('127.0.0.1:3000', join(directory, fileName + ext));
+    return resolve(process.env.BASE_URL, join(directory, fileName + ext));
   }
 
   getFileContent (path: string) {
