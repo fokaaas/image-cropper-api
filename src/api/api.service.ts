@@ -1,17 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, StreamableFile } from '@nestjs/common';
+import type { Response } from 'express';
 import * as fs from 'fs';
 import { UrlDTO } from '../dto/url.dto';
 import axios from 'axios';
 import sharp from 'sharp';
-import { FileService } from '../utils/files/file.service';
 import { extname } from 'path';
 
 @Injectable()
 export class ApiService {
-  constructor (
-    private fileService: FileService,
-  ) {}
-
   getStatus () {
     const data = fs.readFileSync('package.json', 'utf-8');
     const { dependencies, devDependencies } = JSON.parse(data);
@@ -23,16 +19,19 @@ export class ApiService {
     };
   }
 
-  async processImage (data: UrlDTO) {
-    const response = await axios.get(data.url, { responseType: 'arraybuffer' });
+  async processImage (data: UrlDTO, res: Response) {
+    const fileResponse = await axios.get(data.url, { responseType: 'arraybuffer' });
 
-    const imageBuffer = await sharp(response.data)
+    const buffer = await sharp(fileResponse.data)
       .resize({ width: 500, height: 500 })
       .grayscale()
       .toBuffer();
 
-    const url = this.fileService.saveByHash('images', imageBuffer, extname(data.url));
+    res.set({
+      'Content-Type': `image/${extname(data.url).slice(1)}`,
+      'Content-Disposition': `attachment; filename="result${extname(data.url)}"`,
+    });
 
-    return { url };
+    return new StreamableFile(buffer);
   }
 }
