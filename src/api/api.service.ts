@@ -31,7 +31,7 @@ export class ApiService {
     const fileResponse = await axios.get(url, { responseType: 'arraybuffer' });
 
     const buffer = await sharp(fileResponse.data)
-      .resize({ width: 500, height: 500 })
+      .resize({ width: 200, height: 200 })
       .grayscale()
       .toBuffer();
 
