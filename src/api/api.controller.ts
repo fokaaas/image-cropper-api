@@ -1,5 +1,7 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiService } from './api.service';
+import { UrlDTO } from '../dto/url.dto';
+import { ImageValidationPipe } from '../utils/pipes/ImageValidationPipe';
 
 @Controller('api')
 export class ApiController {
@@ -13,7 +15,9 @@ export class ApiController {
   }
 
   @Post('/process-image')
-  async processImage () {
-    return;
+  async processImage (
+    @Body(ImageValidationPipe) body: UrlDTO,
+  ) {
+    return this.apiService.processImage(body);
   }
 }
